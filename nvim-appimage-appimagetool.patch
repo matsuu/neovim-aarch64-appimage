@@ -1,0 +1,49 @@
+diff --git a/scripts/genappimage.sh b/scripts/genappimage.sh
+index cc88ab555..2f76c54ed 100755
+--- a/scripts/genappimage.sh
++++ b/scripts/genappimage.sh
+@@ -37,21 +37,25 @@ VERSION=$("$ROOT_DIR"/build/bin/nvim --version | head -n 1 | grep -o 'v.*')
+ 
+ cd "$APP_BUILD_DIR"
+ 
+-# Only downloads linuxdeploy if the remote file is different from local
+-if [ -e "$APP_BUILD_DIR"/linuxdeploy-x86_64.AppImage ]; then
+-  curl -Lo "$APP_BUILD_DIR"/linuxdeploy-x86_64.AppImage \
+-    -z "$APP_BUILD_DIR"/linuxdeploy-x86_64.AppImage \
+-    https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage  
++# Only downloads appimagetool if the remote file is different from local
++if [ -e "$APP_BUILD_DIR"/appimagetool-$ARCH.AppImage ]; then
++  curl -Lo "$APP_BUILD_DIR"/appimagetool-$ARCH.AppImage \
++    -z "$APP_BUILD_DIR"/appimagetool-$ARCH.AppImage \
++    https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-$ARCH.AppImage
+ else
+-  curl -Lo "$APP_BUILD_DIR"/linuxdeploy-x86_64.AppImage \
+-    https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
++  curl -Lo "$APP_BUILD_DIR"/appimagetool-$ARCH.AppImage \
++    https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-$ARCH.AppImage
+ fi
+ 
+-chmod +x "$APP_BUILD_DIR"/linuxdeploy-x86_64.AppImage
++chmod +x "$APP_BUILD_DIR"/appimagetool-$ARCH.AppImage
++"$APP_BUILD_DIR"/appimagetool-$ARCH.AppImage --appimage-extract
++ln -s squashfs-root/AppRun appimagetool
+ 
+-# metainfo is not packaged automatically by linuxdeploy
++# metainfo is not packaged automatically by appimagetool
+ mkdir "$APP_DIR/usr/share/metainfo/"
+ cp "$ROOT_DIR/runtime/nvim.appdata.xml" "$APP_DIR/usr/share/metainfo/"
++cp "$ROOT_DIR/runtime/nvim.desktop" "$APP_DIR/"
++cp "$ROOT_DIR/runtime/nvim.png" "$APP_DIR/"
+ 
+ cd "$APP_DIR"
+ 
+@@ -85,8 +89,7 @@ fi
+ #   - Expects: $ARCH, $APP, $VERSION env vars
+ #   - Expects: ./$APP.AppDir/ directory
+ #   - Produces: ./nvim.appimage
+-./linuxdeploy-x86_64.AppImage --appdir $APP.AppDir -d $ROOT_DIR/runtime/nvim.desktop -i \
+-"$ROOT_DIR/runtime/nvim.png" --output appimage
++./appimagetool $APP.AppDir $OUTPUT
+ 
+ # Moving the final executable to a different folder so it isn't in the
+ # way for a subsequent build.

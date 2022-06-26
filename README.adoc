@@ -1,0 +1,17 @@
+= neovim-appimage
+
+Build nvim.appimage for your own architecture
+
+== Requirements
+
+* Docker
+
+== Usage
+
+----
+./build.sh
+----
+
+== License
+
+MIT

@@ -1,0 +1,57 @@
+name: release
+
+on:
+  push:
+    branches: [ "main" ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        arch: [aarch64]
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Build
+        uses: uraimo/run-on-arch-action@v2
+        with:
+          arch: ${{ matrix.arch }}
+          distro: ubuntu18.04
+          githubToken: ${{ github.token }}
+          setup: |
+            mkdir -p "${PWD}/artifacts"
+          dockerRunArgs: |
+            --volume "${PWD}/artifacts:/artifacts"
+
+          env: |
+            artifact_name: nvim-${{ matrix.arch }}.appimage
+
+          shell: /bin/sh
+          
+          install: |
+            apt-get update -qy
+            apt-get install -qy automake cmake curl g++ gettext git libtool-bin make pkg-config unzip
+          
+          run: |
+            BRANCH="stable"
+            if echo "${GITHUB_REF_NAME}" | grep "^v[0-9]" >/dev/null ; then
+              BRANCH="${GITHUB_REF_NAME}"
+            fi
+            git clone -b "${BRANCH}" --single-branch --depth 1 https://github.com/neovim/neovim.git
+            cd neovim
+            patch -p1 < ../nvim-appimage-appimagetool.patch
+            make appimage
+            cp build/bin/nvim.appimage "/artifacts/${artifact_name}"
+      -
+        name: Checksum
+        run: |
+          cd artifacts
+          sha256sum * > SHA256SUM

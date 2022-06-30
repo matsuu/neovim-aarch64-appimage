@@ -32,9 +32,7 @@ jobs:
             --volume "${PWD}/artifacts:/artifacts"
 
           env: |
-            artifact_name: nvim-${{ matrix.arch }}.appimage
-
-          shell: /bin/sh
+            artifact_name: nvim-${{ matrix.arch }}-${{ env.GITHUB_REF_NAME }}.appimage
           
           install: |
             apt-get update -qy
@@ -42,8 +40,8 @@ jobs:
           
           run: |
             BRANCH="stable"
-            if echo "${GITHUB_REF_NAME}" | grep "^v[0-9]" >/dev/null ; then
-              BRANCH="${GITHUB_REF_NAME}"
+            if echo "${{ env.GITHUB_REF_NAME }}" | grep "^v[0-9]" >/dev/null ; then
+              BRANCH="${{ env.GITHUB_REF_NAME }}"
             fi
             git clone -b "${BRANCH}" --single-branch --depth 1 https://github.com/neovim/neovim.git
             cd neovim

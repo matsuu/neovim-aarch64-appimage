@@ -1,7 +1,7 @@
 FROM ubuntu:18.04 as build
 
+ARG BRANCH=master
 ENV DEBIAN_FRONTEND=noninteractive
-ENV BRANCH=master
 
 RUN \
   apt update && \

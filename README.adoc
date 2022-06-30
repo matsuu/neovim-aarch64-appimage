@@ -8,8 +8,16 @@ Build nvim.appimage for your own architecture
 
 == Usage
 
+build master branch
+
 ----
 ./build.sh
+----
+
+build with specified version
+
+----
+./build.sh v0.7.2
 ----
 
 == License

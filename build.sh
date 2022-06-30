@@ -2,7 +2,14 @@
 
 set -e
 
-docker image build -t neovim .
-docker run --rm neovim cat /nvim.appimage > nvim.appimage
-chmod +x nvim.appimage
-docker image rm neovim
+BRANCH="master"
+if [ $# -ne 0 ]; then
+  BRANCH="$1"
+fi
+TAG="neovim-${BRANCH}"
+BINARY="nvim-${BRANCH}.appimage"
+
+docker image build --build-arg BRANCH="${BRANCH}" -t "${TAG}" .
+docker run --rm neovim cat /nvim.appimage > "${BINARY}"
+chmod +x "${BINARY}"
+docker image rm "${TAG}"

@@ -1,6 +1,6 @@
-= neovim-appimage
+= neovim-aarch64-appimage
 
-Build nvim.appimage for your own architecture
+Build nvim.appimage for aarch64(arm64) architecture
 
 == Requirements
 

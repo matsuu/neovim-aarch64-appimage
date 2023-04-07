@@ -1,10 +1,10 @@
 diff --git a/scripts/genappimage.sh b/scripts/genappimage.sh
-index cc88ab555..2f76c54ed 100755
+index dc46f4c..ea48d49 100755
 --- a/scripts/genappimage.sh
 +++ b/scripts/genappimage.sh
-@@ -37,21 +37,25 @@ VERSION=$("$ROOT_DIR"/build/bin/nvim --version | head -n 1 | grep -o 'v.*')
+@@ -39,21 +39,25 @@ export VERSION
  
- cd "$APP_BUILD_DIR"
+ cd "$APP_BUILD_DIR" || exit
  
 -# Only downloads linuxdeploy if the remote file is different from local
 -if [ -e "$APP_BUILD_DIR"/linuxdeploy-x86_64.AppImage ]; then
@@ -35,13 +35,13 @@ index cc88ab555..2f76c54ed 100755
 +cp "$ROOT_DIR/runtime/nvim.desktop" "$APP_DIR/"
 +cp "$ROOT_DIR/runtime/nvim.png" "$APP_DIR/"
  
- cd "$APP_DIR"
+ cd "$APP_DIR" || exit
  
-@@ -85,8 +89,7 @@ fi
+@@ -87,8 +91,7 @@ fi
  #   - Expects: $ARCH, $APP, $VERSION env vars
  #   - Expects: ./$APP.AppDir/ directory
  #   - Produces: ./nvim.appimage
--./linuxdeploy-x86_64.AppImage --appdir $APP.AppDir -d $ROOT_DIR/runtime/nvim.desktop -i \
+-./linuxdeploy-x86_64.AppImage --appdir $APP.AppDir -d "$ROOT_DIR"/runtime/nvim.desktop -i \
 -"$ROOT_DIR/runtime/nvim.png" --output appimage
 +./appimagetool $APP.AppDir $OUTPUT
  

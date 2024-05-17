@@ -32,12 +32,10 @@ jobs:
         name: Build
         uses: docker/build-push-action@v5
         with:
-          platforms:
-            - ${{ matrix.platform }}
+          platforms: ${{ matrix.platform }}
           build-args:
             -  BRANCH={{ env.GITHUB_REF_NAME }}
-          tags:
-            - neovim:{{ env.GITHUB_REF_NAME }}
+          tags: neovim:{{ env.GITHUB_REF_NAME }}
       -
         name: Run
         run: |

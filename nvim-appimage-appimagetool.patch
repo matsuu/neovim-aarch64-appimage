@@ -1,7 +1,16 @@
 diff --git a/scripts/genappimage.sh b/scripts/genappimage.sh
-index dc46f4c..ea48d49 100755
+index e8aac42a9..a17793e36 100755
 --- a/scripts/genappimage.sh
 +++ b/scripts/genappimage.sh
+@@ -27,7 +27,7 @@ APP_DIR="$APP.AppDir"
+ 
+ # Build and install nvim into the AppImage
+ make CMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}"
+-cmake --install build --prefix="$APP_BUILD_DIR/${APP_DIR}/usr"
++cmake --install build --prefix "$APP_BUILD_DIR/${APP_DIR}/usr"
+ 
+ ########################################################################
+ # Get helper functions and move to AppDir
 @@ -39,21 +39,25 @@ export VERSION
  
  cd "$APP_BUILD_DIR" || exit
@@ -30,7 +39,7 @@ index dc46f4c..ea48d49 100755
  
 -# metainfo is not packaged automatically by linuxdeploy
 +# metainfo is not packaged automatically by appimagetool
- mkdir "$APP_DIR/usr/share/metainfo/"
+ mkdir -p "$APP_DIR/usr/share/metainfo/"
  cp "$ROOT_DIR/runtime/nvim.appdata.xml" "$APP_DIR/usr/share/metainfo/"
 +cp "$ROOT_DIR/runtime/nvim.desktop" "$APP_DIR/"
 +cp "$ROOT_DIR/runtime/nvim.png" "$APP_DIR/"

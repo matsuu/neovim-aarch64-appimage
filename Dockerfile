@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 as build
+FROM ubuntu:20.04 as build
 
 ARG BRANCH=master
 ENV DEBIAN_FRONTEND=noninteractive

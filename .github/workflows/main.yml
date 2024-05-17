@@ -14,7 +14,10 @@ jobs:
 
     strategy:
       matrix:
-        arch: [aarch64]
+        arch:
+          - aarch64
+        platform:
+          - linux/arm64
     steps:
       -
         name: Checkout
@@ -30,15 +33,15 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           platforms:
-            - linux/${{ matrix.arch }}
+            - ${{ matrix.platform }}
           build-args:
             -  BRANCH={{ env.GITHUB_REF_NAME }}
           tags:
-            - neovim-{{ env.GITHUB_REF_NAME }}
+            - neovim:{{ env.GITHUB_REF_NAME }}
       -
         name: Run
         run: |
-          docker run --rm neovim-{{ env.GITHUB_REF_NAME }} cat /nvim.appimage > nvim-{{ env.GITHUB_REF_NAME }}-${{ matrix.arch }}.appimage
+          docker run --platform=${{ matrix.platform }} --rm neovim:{{ env.GITHUB_REF_NAME }} cat /nvim.appimage > nvim-{{ env.GITHUB_REF_NAME }}-${{ matrix.arch }}.appimage
       -
         name: Release
         uses: softprops/action-gh-release@v2

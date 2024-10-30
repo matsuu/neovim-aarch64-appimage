@@ -15,7 +15,7 @@ ADD nvim-appimage-appimagetool.patch nvim-appimage-appimagetool.patch
 
 RUN \
   patch -p1 <nvim-appimage-appimagetool.patch && \
-  make appimage
+  make CMAKE_BUILD_TYPE=Release appimage
 
 FROM busybox
 

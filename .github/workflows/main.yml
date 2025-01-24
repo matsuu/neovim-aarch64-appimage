@@ -23,17 +23,13 @@ jobs:
         name: Checkout
         uses: actions/checkout@v4
       -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      -
         name: Run
-        run: ./build.sh {{ env.GITHUB_REF_NAME }}
-      -
-        name: Rename
-        run: mv nvim-{{ env.GITHUB_REF_NAME }}.appimage nvim-{{ env.GITHUB_REF_NAME }}-${{ matrix.arch }}.appimage
+        run: |
+          ./build.sh ${BRANCH}
+          mv nvim-${BRANCH}.appimage nvim-${BRANCH}-${ARCH}.appimage
+        env:
+          ARCH: ${{ matrix.arch }}
+          BRANCH: {{ env.GITHUB_REF_NAME }}
       -
         name: Release
         uses: softprops/action-gh-release@v2

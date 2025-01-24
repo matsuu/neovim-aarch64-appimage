@@ -25,15 +25,12 @@ jobs:
       -
         name: Run
         run: |
-          ./build.sh ${BRANCH}
-          mv nvim-${BRANCH}.appimage nvim-${BRANCH}-${ARCH}.appimage
-        env:
-          ARCH: ${{ matrix.arch }}
-          BRANCH: {{ env.GITHUB_REF_NAME }}
+          ./build.sh ${{ env.GITHUB_REF_NAME }}
+          mv nvim-${{ env.GITHUB_REF_NAME }}.appimage nvim-${{ env.GITHUB_REF_NAME }}-${{ matrix.arch }}.appimage
       -
         name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            nvim-{{ env.GITHUB_REF_NAME }}-${{ matrix.arch }}.appimage
+            nvim-${{ env.GITHUB_REF_NAME }}-${{ matrix.arch }}.appimage

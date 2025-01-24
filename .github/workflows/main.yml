@@ -25,8 +25,11 @@ jobs:
       -
         name: Run
         run: |
-          ./build.sh ${{ env.GITHUB_REF_NAME }}
-          mv nvim-${{ env.GITHUB_REF_NAME }}.appimage nvim-${{ env.GITHUB_REF_NAME }}-${{ matrix.arch }}.appimage
+          BRANCH="master"
+          if [ "${{ env.GITHUB_REF_NAME }}" ] ; then
+            BRANCH="${{ env.GITHUB_REF_NAME }}"
+          ./build.sh ${BRANCH}
+          mv nvim-${BRANCH}.appimage nvim-${BRANCH}-${{ matrix.arch }}.appimage
       -
         name: Release
         uses: softprops/action-gh-release@v2

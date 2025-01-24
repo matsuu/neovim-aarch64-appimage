@@ -1,0 +1,40 @@
+name: release
+
+on:
+  push:
+    branches: [ "main" ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+
+    strategy:
+      matrix:
+        arch:
+          - aarch64
+        platform:
+          - linux/arm64
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Run
+        run: |
+          BRANCH="master"
+          if [ -n "${{ env.GITHUB_REF_NAME }}" ] ; then
+            BRANCH="${{ env.GITHUB_REF_NAME }}"
+          fi
+          ./build.sh ${BRANCH}
+          mv nvim-${BRANCH}.appimage nvim-${BRANCH}-${{ matrix.arch }}.appimage
+      -
+        name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            nvim-${{ env.GITHUB_REF_NAME }}-${{ matrix.arch }}.appimage

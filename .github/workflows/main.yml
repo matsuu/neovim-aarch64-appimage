@@ -26,8 +26,9 @@ jobs:
         name: Run
         run: |
           BRANCH="master"
-          if [ "${{ env.GITHUB_REF_NAME }}" ] ; then
+          if [ -n "${{ env.GITHUB_REF_NAME }}" ] ; then
             BRANCH="${{ env.GITHUB_REF_NAME }}"
+          fi
           ./build.sh ${BRANCH}
           mv nvim-${BRANCH}.appimage nvim-${BRANCH}-${{ matrix.arch }}.appimage
       -

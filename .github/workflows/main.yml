@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
 
     strategy:
       matrix:
@@ -29,17 +29,11 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
-        name: Build
-        uses: docker/build-push-action@v5
-        with:
-          platforms: ${{ matrix.platform }}
-          build-args:
-            -  BRANCH={{ env.GITHUB_REF_NAME }}
-          tags: neovim:{{ env.GITHUB_REF_NAME }}
-      -
         name: Run
-        run: |
-          docker run --platform=${{ matrix.platform }} --rm neovim:{{ env.GITHUB_REF_NAME }} cat /nvim.appimage > nvim-{{ env.GITHUB_REF_NAME }}-${{ matrix.arch }}.appimage
+        run: ./build.sh {{ env.GITHUB_REF_NAME }}
+      -
+        name: Rename
+        run: mv nvim-{{ env.GITHUB_REF_NAME }}.appimage nvim-{{ env.GITHUB_REF_NAME }}-${{ matrix.arch }}.appimage
       -
         name: Release
         uses: softprops/action-gh-release@v2

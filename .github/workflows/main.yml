@@ -48,5 +48,6 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           tag_name: master
+          prerelease: true
           files: |
             nvim-master-${{ matrix.arch }}.appimage

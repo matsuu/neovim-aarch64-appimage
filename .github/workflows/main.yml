@@ -1,4 +1,6 @@
 name: release
+permissions:
+  contents: write
 
 on:
   push:
@@ -7,6 +9,8 @@ on:
       - 'v*'
   pull_request:
     branches: [ "main" ]
+  schedule:
+    - cron: '42 11 * * 4'
 
 jobs:
   build:
@@ -26,15 +30,23 @@ jobs:
         name: Run
         run: |
           BRANCH="master"
-          if [ -n "${{ env.GITHUB_REF_NAME }}" ] ; then
-            BRANCH="${{ env.GITHUB_REF_NAME }}"
+          if [ "${GITHUB_REF_TYPE}" = "tag" ] ; then
+            BRANCH="${GITHUB_REF_NAME}"
           fi
           ./build.sh ${BRANCH}
           mv nvim-${BRANCH}.appimage nvim-${BRANCH}-${{ matrix.arch }}.appimage
       -
-        name: Release
+        name: Release for tags
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            nvim-${{ env.GITHUB_REF_NAME }}-${{ matrix.arch }}.appimage
+            nvim-${GITHUB_REF_NAME}-${{ matrix.arch }}.appimage
+      -
+        name: Release for master
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag_name: master
+          files: |
+            nvim-master-${{ matrix.arch }}.appimage

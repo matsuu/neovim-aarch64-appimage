@@ -41,7 +41,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            nvim-${GITHUB_REF_NAME}-${{ matrix.arch }}.appimage
+            nvim-${{ github.ref_name }}-${{ matrix.arch }}.appimage
       -
         name: Release for master
         uses: softprops/action-gh-release@v2

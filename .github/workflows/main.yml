@@ -47,7 +47,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: master
+          name: master
           prerelease: true
           files: |
             nvim-master-${{ matrix.arch }}.appimage

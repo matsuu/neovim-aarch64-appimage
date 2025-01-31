@@ -2,6 +2,8 @@
 
 Build nvim.appimage for aarch64(arm64) architecture
 
+Since v0.10.4, Neovim has been distributing an AppImage for arm64, making this repository obsolete.
+
 == Requirements
 
 * Docker
